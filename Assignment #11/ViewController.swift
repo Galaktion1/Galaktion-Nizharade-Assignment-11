@@ -17,19 +17,22 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var resultLabel: UILabel!
     
-    
     @IBOutlet weak var slider: UISlider!
     
     @IBOutlet weak var sliderValueLabel: UILabel!
     
     @IBOutlet weak var textField: UITextField!
     
-    @IBAction func sliderValueChanged(_ sender: UISlider) {
-        sliderValueLabel.text = "\(Int(sender.value))"
-        configureUIElements(sliderMaximum: sender.value)
+    private struct sliderComponentSettings {
+       static let maxValue: Float = 100.0
+       static let minValue: Float = 0.1
         
-        print(sender.value)
     }
+   
+    var randomFloatsArray = [Float]()
+    var maximum = Float()
+    var minimum = Float()
+    var divided = Float()
     
     
     override func viewDidLoad() {
@@ -40,14 +43,14 @@ class ViewController: UIViewController {
         configureUIElements(sliderMaximum: 100)
         slider.value = divided
         sliderValueLabel.text = "\(Int(divided))"
-        
-        // Do any additional setup after loading the view.
     }
     
-    var randomFloatsArray = [Float]()
-    var maximum = Float()
-    var minimum = Float()
-    var divided = Float()
+    @IBAction func sliderValueChanged(_ sender: UISlider) {
+        sliderValueLabel.text = "\(Int(sender.value))"
+        configureUIElements(sliderMaximum: sender.value)
+        
+        print(sender.value)
+    }
     
     private func configureUIElements(sliderMaximum: Float) {
         
@@ -56,7 +59,6 @@ class ViewController: UIViewController {
                                (Float.random(in: 0 ..< sliderMaximum)),
                                (Float.random(in: 0 ..< sliderMaximum))]
         }
-        
 
         firstLabel.text  = "\(randomFloatsArray[0])"
         secondLabel.text = "\(randomFloatsArray[1])"
@@ -66,8 +68,8 @@ class ViewController: UIViewController {
         minimum = randomFloatsArray.min()!
         divided = (maximum + minimum) / 2
         
-        slider.minimumValue = 0.1
-        slider.maximumValue = 100
+        slider.minimumValue = sliderComponentSettings.minValue
+        slider.maximumValue = sliderComponentSettings.maxValue
     }
     
 }
@@ -87,7 +89,6 @@ extension ViewController: UITextFieldDelegate {
     }
 
     func performAction() {
-        
         switch textField.text?.lowercased() {
         case "maximum":
             setCorrcetValueOnResultLabel(value: maximum)
@@ -95,14 +96,11 @@ extension ViewController: UITextFieldDelegate {
             setCorrcetValueOnResultLabel(value: minimum)
         case "average":
             setCorrcetValueOnResultLabel(value: randomFloatsArray.reduce(0, +) / Float(randomFloatsArray.count))
-
+            
         default:
             resultLabel.font = resultLabel.font.withSize(UIScreen.main.bounds.width / 3)
             resultLabel.text = "👻"
-            
-        //action events
+        }
     }
-
-
-    }
+    
 }
